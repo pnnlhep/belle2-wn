@@ -12,10 +12,26 @@ RUN service autofs restart
 RUN echo 'CVMFS_REPOSITORIES="belle.cern.ch"' >> /etc/cvmfs/default.local 
 RUN ls /cvmfs/belle.cern.ch
 
-## Copy repo
+## Copy Belle II tools
 RUN mkdir -p /tmp/cvmfs/belle.cern.ch/sl6/
 RUN cd /tmp/cvmfs/belle.cern.ch/sl6/
 RUN rsync -lr /cvmfs/belle.cern.ch/sl6/tools ./ 
+
+## Copy Belle II externals
+RUN mkdir -p /tmp/cvmfs/belle.cern.ch/sl6/externals
+RUN cd /tmp/cvmfs/belle.cern.ch/sl6/externals
+RUN rsync -lr /cvmfs/belle.cern.ch/sl6/externals/v01-01-08 ./
+
+## Copy Belle II prod release
+RUN mkdir -p /tmp/cvmfs/belle.cern.ch/sl6/releases
+RUN cd /tmp/cvmfs/belle.cern.ch/sl6/releases
+RUN rsync -lr /cvmfs/belle.cern.ch/sl6/releases/release-00-07-01 ./
+
+## Stop CVMFS and copy hard version
+RUN service autofs stop
+RUN ls /cvmfs/belle.cern.ch
+RUN mkdir -p /cvmfs/belle.cern.ch
+RUN mv /tmp/cvmfs/belle.cern.ch/sl6 /cvmfs/belle.cern.ch/sl6
 
 ## Not sure I need this anymore
 ADD ./start.sh /etc/start.sh

@@ -1,25 +1,30 @@
 FROM pnnlhep/osg-base
 MAINTAINER Malachi Schram "malachi.schram@pnnl.gov"
 
-## INSTALL PACKAGES
-#RUN yum install -y fuse cvmfs cvmfs-config-osg; echo user_allow_other > /etc/fuse.conf
-
-## Setup AUTOFS
-#RUN echo "/cvmfs /etc/auto.cvmfs" >> /etc/auto.master
-#RUN service autofs restart
-
-## Setup CVMFS
-#RUN echo 'CVMFS_REPOSITORIES="belle.cern.ch"' >> /etc/cvmfs/default.local 
-#RUN ls /cvmfs/belle.cern.ch
-
 ## Problem with /tmp permission (?)
 RUN chmod 777 -R /tmp
 
-## CERN CVMFS instructions
-RUN yum -y install cvmfs cvmfs-config-default
+## INSTALL PACKAGES
+RUN yum install -y fuse cvmfs cvmfs-config-osg; echo user_allow_other > /etc/fuse.conf
+
+## Setup AUTOFS
+RUN echo "/cvmfs /etc/auto.cvmfs" >> /etc/auto.master
+RUN service autofs restart
+
+## Setup CVMFS
 RUN cvmfs_config setup
 RUN echo 'CVMFS_REPOSITORIES="belle.cern.ch"' >> /etc/cvmfs/default.local 
 RUN cvmfs_config probe
+RUN ls /cvmfs/belle.cern.ch
+
+
+## OSG CVMFS instructions
+#
+## CERN CVMFS instructions
+#RUN yum -y install cvmfs cvmfs-config-default
+#RUN cvmfs_config setup
+#RUN echo 'CVMFS_REPOSITORIES="belle.cern.ch"' >> /etc/cvmfs/default.local 
+#RUN cvmfs_config probe
 #RUN service autofs restart
 
 ## Copy Belle II tools

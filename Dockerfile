@@ -16,7 +16,7 @@ MAINTAINER Malachi Schram "malachi.schram@pnnl.gov"
 RUN chmod 777 -R /tmp
 
 ## CERN CVMFS instructions
-RUN sudo yum install cvmfs cvmfs-config-default
+RUN yum install cvmfs cvmfs-config-default
 RUN cvmfs_config setup
 RUN echo 'CVMFS_REPOSITORIES="belle.cern.ch"' >> /etc/cvmfs/default.local 
 RUN cvmfs_config probe

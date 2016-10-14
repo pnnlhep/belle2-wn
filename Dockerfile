@@ -1,10 +1,15 @@
-FROM pnnlhep/osg-cvmfs
+FROM pnnlhep/osg-compute-stable
 MAINTAINER Malachi Schram "malachi.schram@pnnl.gov"
 
 ## Problem with /tmp permission (?)
 RUN chmod 777 -R /tmp
-RUN export REPO=belle.cern.ch
 
+### INSTALL PACKAGES
+RUN yum install -y fuse cvmfs cvmfs-config-osg; echo user_allow_other > /etc/fuse.conf
+ADD ./startCVMFS.sh /etc/startCVMFS.sh
+RUN chmod +x /etc/startCVMFS.sh
+RUN export REPO=belle.cern.ch; /etc/startCVMFS.sh
+#
 ## INSTALL PACKAGES
 #RUN yum install -y fuse cvmfs cvmfs-config-osg; echo user_allow_other > /etc/fuse.conf
 
@@ -16,7 +21,7 @@ RUN export REPO=belle.cern.ch
 #RUN cvmfs_config setup
 #RUN echo 'CVMFS_REPOSITORIES="belle.cern.ch"' >> /etc/cvmfs/default.local 
 #RUN cvmfs_config probe
-RUN ls /cvmfs/belle.cern.ch || true
+#RUN ls /cvmfs/belle.cern.ch || true
 
 
 ## OSG CVMFS instructions
